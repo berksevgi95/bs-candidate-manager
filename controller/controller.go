@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -28,7 +29,7 @@ func NewController() *Controller {
 	return c;
 }
 
-// ReadCandidates godoc
+// ReadCandidate godoc
 // @Summary Read candidates
 // @Description Read all candidates
 // @Accept  json
@@ -38,9 +39,30 @@ func NewController() *Controller {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /readCandidate [get]
-func (c *Controller) ReadCandidates(ctx *gin.Context) {
+func (c *Controller) ReadCandidate(ctx *gin.Context) {
 	id := ctx.Query("id")
 	var candidate models.Candidate
 	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
 	ctx.JSON(http.StatusOK, candidate)
+}
+
+// CreateCandidate godoc
+// @Summary Create candidate
+// @Description Create new candidate
+// @Accept  json
+// @Produce  json
+// @Param id body string false "name search by id"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /createCandidate [post]
+func (c *Controller) CreateCandidate(ctx *gin.Context) {
+	
+	var candidate models.Candidate
+	json.NewDecoder(ctx.Request.Body).Decode(&candidate)
+	result, err := c.Database.Collection(models.CandidateTableName()).InsertOne(ctx, candidate)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, err.Error())
+	}
+	ctx.JSON(http.StatusOK, result.InsertedID)
 }

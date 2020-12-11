@@ -8,6 +8,33 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
+  /createCandidate:
+    post:
+      consumes:
+      - application/json
+      description: Create new candidate
+      parameters:
+      - description: name search by id
+        in: body
+        name: id
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Create candidate
   /readCandidate:
     get:
       consumes:

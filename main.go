@@ -27,7 +27,8 @@ func main() {
 	c := controller.NewController()
 
 	candidates := r.Group("/"); {
-		candidates.GET("/readCandidate", c.ReadCandidates)
+		candidates.GET("/readCandidate", c.ReadCandidate)
+		candidates.POST("/createCandidate", c.CreateCandidate)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")
