@@ -8,16 +8,15 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
-  /candidates/read:
+  /readCandidate:
     get:
       consumes:
       - application/json
       description: Read all candidates
       parameters:
-      - description: Account ID
-        in: path
-        name: _id
-        required: true
+      - description: name search by id
+        in: query
+        name: id
         type: string
       produces:
       - application/json
@@ -29,9 +28,7 @@ paths:
               description: qwerty
               type: string
           schema:
-            items:
-              type: object
-            type: array
+            type: object
         default:
           description: ""
           schema:

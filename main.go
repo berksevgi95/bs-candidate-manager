@@ -23,17 +23,11 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 		
-
 	r := gin.Default()
-
 	c := controller.NewController()
 
-	v1 := r.Group("/")
-	{
-		candidates := v1.Group("/candidates")
-		{
-			candidates.GET("/read", c.ReadCandidates)
-		}
+	candidates := r.Group("/"); {
+		candidates.GET("/readCandidate", c.ReadCandidates)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")

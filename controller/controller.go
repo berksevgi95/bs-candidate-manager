@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"net/http"
 	"context"
+	"net/http"
 	"time"
 
-	"../models"
 	"../config"
+	"../models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -31,31 +31,16 @@ func NewController() *Controller {
 // ReadCandidates godoc
 // @Summary Read candidates
 // @Description Read all candidates
-// @Param _id path string true "Account ID"
-// @Accept json
-// @Produce json
-// @Success 200 {array} object models.Candidate
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
-// @Router /candidates/read [get]
+// @Router /readCandidate [get]
 func (c *Controller) ReadCandidates(ctx *gin.Context) {
-	var candidates []models.Candidate
-	cursor, err := c.Database.Collection(models.CandidateTableName()).Find(ctx, bson.M{})
-	if err != nil {
-		// response.WriteHeader(http.StatusInternalServerError)
-		// response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
-		return
-	}
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var candidate models.Candidate
-		cursor.Decode(&candidate)
-		candidates = append(candidates, candidate)
-	}
-	if err := cursor.Err(); err != nil {
-		// response.WriteHeader(http.StatusInternalServerError)
-		// response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
-		return
-	}
-	ctx.JSON(http.StatusOK, candidates)
+	id := ctx.Query("id")
+	var candidate models.Candidate
+	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
+	ctx.JSON(http.StatusOK, candidate)
 }

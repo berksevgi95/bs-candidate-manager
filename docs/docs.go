@@ -33,7 +33,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/candidates/read": {
+        "/readCandidate": {
             "get": {
                 "description": "Read all candidates",
                 "consumes": [
@@ -46,20 +46,16 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Account ID",
-                        "name": "_id",
-                        "in": "path",
-                        "required": true
+                        "description": "name search by id",
+                        "name": "id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object"
-                            }
+                            "type": "object"
                         },
                         "headers": {
                             "Token": {
