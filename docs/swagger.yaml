@@ -8,11 +8,17 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
-  /accounts:
+  /candidates/read:
     get:
       consumes:
       - application/json
-      description: get accounts
+      description: Read all candidates
+      parameters:
+      - description: Account ID
+        in: path
+        name: _id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -30,33 +36,5 @@ paths:
           description: ""
           schema:
             type: object
-      summary: List accounts
-  /accounts/{id}:
-    get:
-      consumes:
-      - application/json
-      description: get string by ID
-      operationId: get-string-by-int
-      parameters:
-      - description: Account ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          headers:
-            Token:
-              description: qwerty
-              type: string
-          schema:
-            type: object
-        default:
-          description: ""
-          schema:
-            type: object
-      summary: Show a account
+      summary: Read candidates
 swagger: "2.0"

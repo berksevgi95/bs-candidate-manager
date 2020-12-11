@@ -33,57 +33,21 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/accounts": {
+        "/candidates/read": {
             "get": {
-                "description": "get accounts",
+                "description": "Read all candidates",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List accounts",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object"
-                            }
-                        },
-                        "headers": {
-                            "Token": {
-                                "type": "string",
-                                "description": "qwerty"
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "type": "object"
-                        }
-                    }
-                }
-            }
-        },
-        "/accounts/{id}": {
-            "get": {
-                "description": "get string by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Show a account",
-                "operationId": "get-string-by-int",
+                "summary": "Read candidates",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "Account ID",
-                        "name": "id",
+                        "name": "_id",
                         "in": "path",
                         "required": true
                     }
@@ -92,7 +56,10 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         },
                         "headers": {
                             "Token": {
