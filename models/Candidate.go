@@ -1,16 +1,8 @@
 package models
 
 import (
+	"time"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
-type Status string
-
-const (
-	Pending Status = "Pending"
-	InProgress Status = "In Progress"
-	Denied Status = "Denied"
-	Accepted Status = "Accepted"
 )
 
 type Candidate struct {
@@ -18,10 +10,10 @@ type Candidate struct {
 	FirstName 		string `json:"first_name" bson:"first_name"`
 	LastName  		string `json:"last_name" bson:"last_name"`
 	Email  			string `json:"email" bson:"email"`
-	Department  	Department `json:"department" bson:"department"`
+	Department  	string `json:"department" bson:"department"`
 	University  	string `json:"university" bson:"university"`
 	Experience  	bool `json:"experience" bson:"experience"`
-	Status			Status `json:"status" bson:"status"`
+	Status			string `json:"status" bson:"status"`
 	MeetingCount 	int `json:"meeting_count" bson:"meeting_count"`
 	NextMeeting 	primitive.DateTime `json:"next_meeting" bson:"next_meeting"`
 	Assignee 		string `json:"assignee" bson:"assignee"`
@@ -29,15 +21,25 @@ type Candidate struct {
 }
 
 func (c *Candidate) Deny() (_candidate *Candidate) {
-	c.Status = Denied;
+	c.Status = "Denied";
 	return c;
 }
 
 func (c *Candidate) Accept() (_candidate *Candidate) {
-	c.Status = Accepted;
+	c.Status = "Accepted";
 	return c;
 }
 
 func CandidateTableName() string {
 	return "Candidates"
+}
+
+func NewCandidate() (c *Candidate) {
+	return &Candidate{
+		ID: primitive.NewObjectID().Hex(),
+		Status: "Pending",
+		MeetingCount: 0,
+		NextMeeting: primitive.NewDateTimeFromTime(time.Now()),
+		ApplicationDate: primitive.NewDateTimeFromTime(time.Now()),
+	}
 }

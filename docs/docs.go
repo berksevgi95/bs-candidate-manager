@@ -85,12 +85,49 @@ var doc = `{
                 "summary": "Create candidate",
                 "parameters": [
                     {
-                        "description": "name search by id",
-                        "name": "id",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "type": "string",
+                        "description": "First Name",
+                        "name": "first_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Last Name",
+                        "name": "last_name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "E-Mail",
+                        "name": "email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Department",
+                        "name": "department",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "University",
+                        "name": "university",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Experience",
+                        "name": "experience",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Assignee",
+                        "name": "assignee",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

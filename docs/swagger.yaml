@@ -40,11 +40,37 @@ paths:
       - application/json
       description: Create new candidate
       parameters:
-      - description: name search by id
-        in: body
-        name: id
-        schema:
-          type: string
+      - description: First Name
+        in: query
+        name: first_name
+        required: true
+        type: string
+      - description: Last Name
+        in: query
+        name: last_name
+        required: true
+        type: string
+      - description: E-Mail
+        in: query
+        name: email
+        type: string
+      - description: Department
+        in: query
+        name: department
+        type: string
+      - description: University
+        in: query
+        name: university
+        type: string
+      - description: Experience
+        in: query
+        name: experience
+        type: boolean
+      - description: Assignee
+        in: query
+        name: assignee
+        required: true
+        type: string
       produces:
       - application/json
       responses:

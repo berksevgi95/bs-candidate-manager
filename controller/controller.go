@@ -2,7 +2,8 @@ package controller
 
 import (
 	"context"
-	"encoding/json"
+	"strconv"
+	// "encoding/json"
 	"net/http"
 	"time"
 
@@ -51,14 +52,35 @@ func (c *Controller) ReadCandidate(ctx *gin.Context) {
 // @Description Create new candidate
 // @Accept  json
 // @Produce  json
-// @Param id body string false "name search by id"
+// @Param first_name query string true "First Name"
+// @Param last_name query string true "Last Name"
+// @Param email query string false "E-Mail"
+// @Param department query string false "Department"
+// @Param university query string false "University"
+// @Param experience query boolean false "Experience"
+// @Param assignee query string true "Assignee"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /createCandidate [post]
 func (c *Controller) CreateCandidate(ctx *gin.Context) {
-	var candidate models.Candidate
-	json.NewDecoder(ctx.Request.Body).Decode(&candidate)
+	FirstName := ctx.Query("first_name")
+	LastName := ctx.Query("last_name")
+	Email := ctx.Query("email")
+	Department := ctx.Query("department")
+	University := ctx.Query("university")
+	Experience, _ := strconv.ParseBool(ctx.Query("experience"))
+	Assignee := ctx.Query("assignee")
+
+	candidate := models.NewCandidate()
+	candidate.FirstName = FirstName
+	candidate.LastName = LastName
+	candidate.Email = Email
+	candidate.Department = Department
+	candidate.University = University
+	candidate.Experience = Experience
+	candidate.Assignee = Assignee
+
 	result, err := c.Database.Collection(models.CandidateTableName()).InsertOne(ctx, candidate)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, err.Error())
