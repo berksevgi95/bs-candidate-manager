@@ -18,7 +18,7 @@ type Candidate struct {
 	FirstName 		string `json:"first_name" bson:"first_name"`
 	LastName  		string `json:"last_name" bson:"last_name"`
 	Email  			string `json:"email" bson:"email"`
-	Department  	string `json:"department" bson:"department"`
+	Department  	Department `json:"department" bson:"department"`
 	University  	string `json:"university" bson:"university"`
 	Experience  	bool `json:"experience" bson:"experience"`
 	Status			Status `json:"status" bson:"status"`
