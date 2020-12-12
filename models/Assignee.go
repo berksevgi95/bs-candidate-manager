@@ -12,9 +12,18 @@ type Assignee struct {
 	Department  	string `json:"department" bson:"department"`
 }
 
-func FindAssigneeIDByName(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Assignee, err error) {
+func FindAssigneeIDByName(ctx *gin.Context, db *mongo.Database, m map[string]string) (string, error) {
 	var assignee Assignee
 	dbErr := db.Collection("Assignees").FindOne(ctx, bson.M{"name":m["name"]}).Decode(&assignee)
+	if dbErr != nil {
+		return "Not found", dbErr
+	}
+	return assignee.ID, nil
+}
+
+func FindAssigneeByID(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Assignee, error) {
+	var assignee Assignee
+	dbErr := db.Collection("Assignees").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&assignee)
 	if dbErr != nil {
 		return nil, dbErr
 	}

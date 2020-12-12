@@ -155,13 +155,13 @@ func (c *Controller) AcceptCandidate(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /findAssigneeIDByName [get]
 func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
-	foundAssignee, creationError := models.FindAssigneeIDByName(ctx, c.Database, map[string]string{
+	foundAssigneeID, creationError := models.FindAssigneeIDByName(ctx, c.Database, map[string]string{
 		"name": ctx.Query("name"),
 	})
 	if creationError != nil {
 		ctx.JSON(http.StatusNotFound, creationError.Error())
 	} else {
-		ctx.JSON(http.StatusOK, foundAssignee.ID)
+		ctx.JSON(http.StatusOK, foundAssigneeID)
 	}
 }
 
