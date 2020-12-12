@@ -1,11 +1,13 @@
 package main
 
 import (
+	"net/http"
+
+	"./controller"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
-	"./controller"
-	
+
 	"./docs"
 )
 
@@ -32,5 +34,8 @@ func main() {
 		candidates.DELETE("/deleteCandidate", c.DeleteCandidate)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/swagger/index.html")
+	})
 	r.Run(":8080")
 }
