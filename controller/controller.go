@@ -2,17 +2,15 @@ package controller
 
 import (
 	"context"
-	"strconv"
 	"net/http"
 	"time"
 
-	"../config"
-	"../models"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"go.mongodb.org/mongo-driver/bson"
+	"../config"
+	"../models"
 )
 
 type Controller struct { 
@@ -40,10 +38,14 @@ func NewController() *Controller {
 // @Failure default {object} object httputil.DefaultError
 // @Router /readCandidate [get]
 func (c *Controller) ReadCandidate(ctx *gin.Context) {
-	id := ctx.Query("id")
-	var candidate models.Candidate
-	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
-	ctx.JSON(http.StatusOK, candidate)
+	readCandidate, creationError := models.ReadCandidate(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, readCandidate)
+	}
 }
 
 // CreateCandidate godoc
@@ -63,28 +65,20 @@ func (c *Controller) ReadCandidate(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /createCandidate [post]
 func (c *Controller) CreateCandidate(ctx *gin.Context) {
-	FirstName := ctx.Query("first_name")
-	LastName := ctx.Query("last_name")
-	Email := ctx.Query("email")
-	Department := ctx.Query("department")
-	University := ctx.Query("university")
-	Experience, _ := strconv.ParseBool(ctx.Query("experience"))
-	Assignee := ctx.Query("assignee")
-
-	candidate := models.NewCandidate()
-	candidate.FirstName = FirstName
-	candidate.LastName = LastName
-	candidate.Email = Email
-	candidate.Department = Department
-	candidate.University = University
-	candidate.Experience = Experience
-	candidate.Assignee = Assignee
-
-	result, err := c.Database.Collection(models.CandidateTableName()).InsertOne(ctx, candidate)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, err.Error())
+	createdCandidate, creationError := models.CreateCandidate(ctx, c.Database, map[string]string{
+		"first_name": ctx.Query("first_name"),
+		"last_name": ctx.Query("last_name"),
+		"email": ctx.Query("email"),
+		"department": ctx.Query("department"),
+		"university": ctx.Query("university"),
+		"experience": ctx.Query("experience"),
+		"assignee": ctx.Query("assignee"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, createdCandidate)
 	}
-	ctx.JSON(http.StatusOK, result.InsertedID)
 }
 
 // DeleteCandidate godoc
@@ -98,12 +92,14 @@ func (c *Controller) CreateCandidate(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /deleteCandidate [delete]
 func (c *Controller) DeleteCandidate(ctx *gin.Context) {
-	id := ctx.Query("id")
-	result, err := c.Database.Collection(models.CandidateTableName()).DeleteOne(ctx, bson.M{"_id":id})
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, err.Error())
+	deletedCandidate, creationError := models.DeleteCandidate(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, deletedCandidate)
 	}
-	ctx.JSON(http.StatusOK, result.DeletedCount)
 }
 
 // DenyCandidate godoc
@@ -117,17 +113,14 @@ func (c *Controller) DeleteCandidate(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /denyCandidate [put]
 func (c *Controller) DenyCandidate(ctx *gin.Context) {
-	id := ctx.Query("id")
-	var candidate models.Candidate
-	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
-	update := bson.M {
-		"$set": candidate.Deny(),
+	deniedCandidate, creationError := models.DenyCandidate(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, deniedCandidate)
 	}
-	result, err := c.Database.Collection(models.CandidateTableName()).UpdateOne(ctx, bson.M{"_id":id}, update)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, err.Error())
-	}
-	ctx.JSON(http.StatusOK, result)
 }
 
 // AcceptCandidate godoc
@@ -141,17 +134,14 @@ func (c *Controller) DenyCandidate(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /acceptCandidate [put]
 func (c *Controller) AcceptCandidate(ctx *gin.Context) {
-	id := ctx.Query("id")
-	var candidate models.Candidate
-	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
-	update := bson.M {
-		"$set": candidate.Accept(),
+	acceptedCandidate, creationError := models.AcceptCandidate(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, acceptedCandidate)
 	}
-	result, err := c.Database.Collection(models.CandidateTableName()).UpdateOne(ctx, bson.M{"_id":id}, update)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, err.Error())
-	}
-	ctx.JSON(http.StatusOK, result)
 }
 
 // FindAssigneeIDByName godoc
@@ -165,10 +155,14 @@ func (c *Controller) AcceptCandidate(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /findAssigneeIDByName [get]
 func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
-	id := ctx.Query("id")
-	var assignee models.Assignee
-	c.Database.Collection(models.AssigneeTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&assignee)
-	ctx.JSON(http.StatusOK, assignee.Name)
+	foundAssignee, creationError := models.FindAssigneeIDByName(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, foundAssignee.Name)
+	}
 }
 
 // FindAssigneesCandidates godoc
@@ -182,12 +176,12 @@ func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
 // @Failure default {object} object httputil.DefaultError
 // @Router /findAssigneesCandidates [get]
 func (c *Controller) FindAssigneesCandidates(ctx *gin.Context) {
-	id := ctx.Query("id")
-	var candidates []models.Candidate
-	result, err := c.Database.Collection(models.CandidateTableName()).Find(ctx, bson.M{"assignee": id})
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, err.Error())
+	foundCandidates, creationError := models.FindAssigneesCandidates(ctx, c.Database, map[string]string{
+		"assignee": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, foundCandidates)
 	}
-	result.All(ctx, &candidates)
-	ctx.JSON(http.StatusOK, candidates)
 }

@@ -1,8 +1,15 @@
 package models
 
 import (
+	"errors"
+	"regexp"
+	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Candidate struct {
@@ -30,16 +37,90 @@ func (c *Candidate) Accept() (_candidate *Candidate) {
 	return c;
 }
 
-func CandidateTableName() string {
-	return "Candidates"
+
+func ReadCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+	var candidate Candidate
+	dbErr := db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
+	if dbErr != nil {
+		return nil, dbErr
+	}
+	return &candidate, nil
 }
 
-func NewCandidate() (c *Candidate) {
-	return &Candidate{
+func CreateCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+	experience, experienceError := strconv.ParseBool(m["experience"])
+	if experienceError != nil {
+		return nil, errors.New("Could not convert experience")
+	}
+
+	var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	if !emailRegex.MatchString(m["email"]) {
+		return nil, errors.New("Not valid email")
+	}
+
+	createdCandidate := &Candidate{
 		ID: primitive.NewObjectID().Hex(),
+		FirstName: m["first_name"],
+		LastName: m["last_name"],
+		Email: m["email"],
+		Department: m["department"],
+		University: m["university"],
+		Experience: experience,
 		Status: "Pending",
 		MeetingCount: 0,
 		NextMeeting: primitive.NewDateTimeFromTime(time.Now()),
+		Assignee: m["assignee"],
 		ApplicationDate: primitive.NewDateTimeFromTime(time.Now()),
 	}
+
+	_, dbErr := db.Collection("Candidates").InsertOne(ctx, createdCandidate)
+	if dbErr != nil {
+		return nil, dbErr
+	}
+
+	return createdCandidate, nil
+}
+
+func DeleteCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (int64, error) {
+	dbResult, dbErr := db.Collection("Candidates").DeleteOne(ctx, bson.M{"_id":m["id"]})
+	if dbErr != nil {
+		return 0, dbErr
+	}
+	return dbResult.DeletedCount, nil
+}
+
+func DenyCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+	var candidate Candidate
+	db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
+	updateDocument := bson.M {
+		"$set": candidate.Deny(),
+	}
+	_, dbErr := db.Collection("Candidates").UpdateOne(ctx, bson.M{"_id":m["id"]}, updateDocument)
+	if dbErr != nil {
+		return nil, dbErr
+	}
+	return &candidate, nil
+}
+
+func AcceptCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+	var candidate Candidate
+	db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
+	updateDocument := bson.M {
+		"$set": candidate.Accept(),
+	}
+	_, dbErr := db.Collection("Candidates").UpdateOne(ctx, bson.M{"_id":m["id"]}, updateDocument)
+	if dbErr != nil {
+		return nil, dbErr
+	}
+	return &candidate, nil
+}
+
+func FindAssigneesCandidates(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *[]Candidate, err error) {
+	var candidates []Candidate
+	dbResult, dbErr := db.Collection("Candidates").Find(ctx, bson.M{"assignee": m["assignee"]})
+	if dbErr != nil {
+		return nil, dbErr
+	}
+	dbResult.All(ctx, &candidates)
+	return &candidates, nil
 }
