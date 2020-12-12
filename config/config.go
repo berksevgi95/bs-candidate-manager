@@ -1,25 +1,15 @@
 package config
 
 type Config struct {
-	DB *DBConfig
-}
-
-type DBConfig struct {
-	Dialect  string
-	Username string
-	Password string
-	Name     string
-	Charset  string
+	Host string
+	Port string
+	Database string
 }
 
 func GetConfig() *Config {
 	return &Config{
-		DB: &DBConfig{
-			Dialect:  "mysql",
-			Username: "root",
-			Password: "dksm5sy9",
-			Name:     "testinger",
-			Charset:  "utf8",
-		},
+		Host:  "localhost",
+		Port: "27017",
+		Database: "Otsimo",
 	}
 }

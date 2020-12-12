@@ -1,0 +1,90 @@
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /createCandidate:
+    post:
+      consumes:
+      - application/json
+      description: Create new candidate
+      parameters:
+      - description: name search by id
+        in: body
+        name: id
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Create candidate
+  /deleteCandidate:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a candidate
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Delete candidates
+  /readCandidate:
+    get:
+      consumes:
+      - application/json
+      description: Read all candidates
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Read candidates
+swagger: "2.0"
