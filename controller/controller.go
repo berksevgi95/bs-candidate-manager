@@ -85,7 +85,6 @@ func (c *Controller) DeleteCandidate(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result.DeletedCount)
 }
 
-
 // DenyCandidate godoc
 // @Summary Deny candidates
 // @Description Denies a candidate
@@ -102,6 +101,30 @@ func (c *Controller) DenyCandidate(ctx *gin.Context) {
 	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
 	update := bson.M {
 		"$set": candidate.Deny(),
+	}
+	result, err := c.Database.Collection(models.CandidateTableName()).UpdateOne(ctx, bson.M{"_id":id}, update)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, err.Error())
+	}
+	ctx.JSON(http.StatusOK, result)
+}
+
+// AcceptCandidate godoc
+// @Summary Accept candidates
+// @Description Accepts a candidate
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /acceptCandidate [put]
+func (c *Controller) AcceptCandidate(ctx *gin.Context) {
+	id := ctx.Query("id")
+	var candidate models.Candidate
+	c.Database.Collection(models.CandidateTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&candidate)
+	update := bson.M {
+		"$set": candidate.Accept(),
 	}
 	result, err := c.Database.Collection(models.CandidateTableName()).UpdateOne(ctx, bson.M{"_id":id}, update)
 	if err != nil {

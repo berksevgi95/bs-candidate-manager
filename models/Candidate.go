@@ -33,6 +33,11 @@ func (c *Candidate) Deny() (_candidate *Candidate) {
 	return c;
 }
 
+func (c *Candidate) Accept() (_candidate *Candidate) {
+	c.Status = Accepted;
+	return c;
+}
+
 func CandidateTableName() string {
 	return "Candidates"
 }
