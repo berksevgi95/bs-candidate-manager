@@ -40,7 +40,7 @@ func (c *Candidate) Accept() (_candidate *Candidate) {
 }
 
 
-func ReadCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+func ReadCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Candidate, error) {
 	var candidate Candidate
 	dbErr := db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
 	if dbErr != nil {
@@ -49,7 +49,7 @@ func ReadCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c
 	return &candidate, nil
 }
 
-func CreateCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+func CreateCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Candidate, error) {
 	experience, experienceError := strconv.ParseBool(m["experience"])
 	if experienceError != nil {
 		return nil, errors.New("Could not convert experience")
@@ -62,6 +62,15 @@ func CreateCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) 
 
 	if utils.DepartmentExist(m["department"]) == -1 {
 		return nil, errors.New("Not valid department")
+	}
+
+	foundAssignee, _ := FindAssigneeByID(ctx, db, map[string]string{ "id": m["assignee"]})
+	if foundAssignee == nil {
+		return nil, errors.New("Assignee not found")	
+	}
+
+	if foundAssignee.Department != m["department"] {
+		return nil, errors.New("Not related department")	
 	}
 
 	createdCandidate := &Candidate{
@@ -95,7 +104,7 @@ func DeleteCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) 
 	return dbResult.DeletedCount, nil
 }
 
-func DenyCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+func DenyCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Candidate, error) {
 	var candidate Candidate
 	db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
 	updateDocument := bson.M {
@@ -108,7 +117,7 @@ func DenyCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c
 	return &candidate, nil
 }
 
-func AcceptCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Candidate, err error) {
+func AcceptCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Candidate, error) {
 	var candidate Candidate
 	db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
 	updateDocument := bson.M {
@@ -121,7 +130,7 @@ func AcceptCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) 
 	return &candidate, nil
 }
 
-func FindAssigneesCandidates(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *[]Candidate, err error) {
+func FindAssigneesCandidates(ctx *gin.Context, db *mongo.Database, m map[string]string) (*[]Candidate, error) {
 	var candidates []Candidate
 	dbResult, dbErr := db.Collection("Candidates").Find(ctx, bson.M{"assignee": m["assignee"]})
 	if dbErr != nil {

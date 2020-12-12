@@ -149,19 +149,19 @@ func (c *Controller) AcceptCandidate(ctx *gin.Context) {
 // @Description Read all candidates
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param name query string false "name"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /findAssigneeIDByName [get]
 func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
-	foundAssignee, creationError := models.FindAssigneeIDByName(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
+	foundAssigneeID, creationError := models.FindAssigneeIDByName(ctx, c.Database, map[string]string{
+		"name": ctx.Query("name"),
 	})
 	if creationError != nil {
 		ctx.JSON(http.StatusNotFound, creationError.Error())
 	} else {
-		ctx.JSON(http.StatusOK, foundAssignee.Name)
+		ctx.JSON(http.StatusOK, foundAssigneeID)
 	}
 }
 
