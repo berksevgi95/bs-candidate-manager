@@ -7,5 +7,5 @@ type Assignee struct {
 }
 
 func AssigneeTableName() string {
-	return "Assignee"
+	return "Assignees"
 }

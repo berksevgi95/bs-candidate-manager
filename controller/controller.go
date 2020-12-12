@@ -132,3 +132,20 @@ func (c *Controller) AcceptCandidate(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, result)
 }
+
+// FindAssigneeIDByName godoc
+// @Summary Read candidates
+// @Description Read all candidates
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /findAssigneeIDByName [get]
+func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
+	id := ctx.Query("id")
+	var assignee models.Assignee
+	c.Database.Collection(models.AssigneeTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&assignee)
+	ctx.JSON(http.StatusOK, assignee.Name)
+}
