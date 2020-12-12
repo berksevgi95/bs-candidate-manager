@@ -10,6 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	
+	"../utils"
 )
 
 type Candidate struct {
@@ -56,6 +58,10 @@ func CreateCandidate(ctx *gin.Context, db *mongo.Database, m map[string]string) 
 	var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 	if !emailRegex.MatchString(m["email"]) {
 		return nil, errors.New("Not valid email")
+	}
+
+	if utils.DepartmentExist(m["department"]) == -1 {
+		return nil, errors.New("Not valid department")
 	}
 
 	createdCandidate := &Candidate{
