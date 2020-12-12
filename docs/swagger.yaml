@@ -145,9 +145,9 @@ paths:
       - application/json
       description: Read all candidates
       parameters:
-      - description: name search by id
+      - description: name
         in: query
-        name: id
+        name: name
         type: string
       produces:
       - application/json

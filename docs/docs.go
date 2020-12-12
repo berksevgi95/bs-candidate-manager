@@ -245,8 +245,8 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
-                        "name": "id",
+                        "description": "name",
+                        "name": "name",
                         "in": "query"
                     }
                 ],

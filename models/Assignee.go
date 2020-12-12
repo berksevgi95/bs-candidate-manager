@@ -13,9 +13,8 @@ type Assignee struct {
 }
 
 func FindAssigneeIDByName(ctx *gin.Context, db *mongo.Database, m map[string]string) (c *Assignee, err error) {
-	id := ctx.Query("id")
 	var assignee Assignee
-	dbErr := db.Collection("Assignees").FindOne(ctx, bson.M{"_id":id}).Decode(&assignee)
+	dbErr := db.Collection("Assignees").FindOne(ctx, bson.M{"name":m["name"]}).Decode(&assignee)
 	if dbErr != nil {
 		return nil, dbErr
 	}
