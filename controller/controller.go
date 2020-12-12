@@ -66,3 +66,22 @@ func (c *Controller) CreateCandidate(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, result.InsertedID)
 }
+
+// DeleteCandidate godoc
+// @Summary Delete candidates
+// @Description Removes a candidate
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /deleteCandidate [delete]
+func (c *Controller) DeleteCandidate(ctx *gin.Context) {
+	id := ctx.Query("id")
+	result, err := c.Database.Collection(models.CandidateTableName()).DeleteOne(ctx, bson.M{"_id":id})
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, err.Error())
+	}
+	ctx.JSON(http.StatusOK, result.DeletedCount)
+}

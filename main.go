@@ -29,6 +29,7 @@ func main() {
 	candidates := r.Group("/"); {
 		candidates.GET("/readCandidate", c.ReadCandidate)
 		candidates.POST("/createCandidate", c.CreateCandidate)
+		candidates.DELETE("/deleteCandidate", c.DeleteCandidate)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")

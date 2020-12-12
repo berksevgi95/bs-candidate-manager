@@ -35,6 +35,32 @@ paths:
           schema:
             type: object
       summary: Create candidate
+  /deleteCandidate:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a candidate
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Delete candidates
   /readCandidate:
     get:
       consumes:
