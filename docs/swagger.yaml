@@ -34,6 +34,62 @@ paths:
           schema:
             type: object
       summary: Accept candidates
+  /arrangeMeeting:
+    put:
+      consumes:
+      - application/json
+      description: Accepts a candidate
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      - description: "2020-11-11T20:59:48.133+03:00"
+        in: query
+        name: nextMeetingTime
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Accept candidates
+  /completeMeeting:
+    put:
+      consumes:
+      - application/json
+      description: Accepts a candidate
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Accept candidates
   /createCandidate:
     post:
       consumes:

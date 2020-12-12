@@ -185,3 +185,47 @@ func (c *Controller) FindAssigneesCandidates(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, foundCandidates)
 	}
 }
+
+// ArrangeMeeting godoc
+// @Summary Accept candidates
+// @Description Accepts a candidate
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Param nextMeetingTime query string false "2020-11-11T20:59:48.133+03:00"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /arrangeMeeting [put]
+func (c *Controller) ArrangeMeeting(ctx *gin.Context) {
+	editedCandidate, creationError := models.ArrangeMeeting(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+		"nextMeetingTime": ctx.Query("nextMeetingTime"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, editedCandidate)
+	}
+}
+
+// CompleteMeeting godoc
+// @Summary Accept candidates
+// @Description Accepts a candidate
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /completeMeeting [put]
+func (c *Controller) CompleteMeeting(ctx *gin.Context) {
+	editedCandidate, creationError := models.CompleteMeeting(ctx, c.Database, map[string]string{
+		"id": ctx.Query("id"),
+	})
+	if creationError != nil {
+		ctx.JSON(http.StatusNotFound, creationError.Error())
+	} else {
+		ctx.JSON(http.StatusOK, editedCandidate)
+	}
+}

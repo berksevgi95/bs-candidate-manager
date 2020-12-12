@@ -36,6 +36,8 @@ func main() {
 		candidates.PUT("/acceptCandidate", c.AcceptCandidate)
 		candidates.GET("/findAssigneeIDByName", c.FindAssigneeIDByName)
 		candidates.GET("/findAssigneesCandidates", c.FindAssigneesCandidates)
+		candidates.PUT("/arrangeMeeting", c.ArrangeMeeting)
+		candidates.PUT("/completeMeeting", c.CompleteMeeting)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/", func(c *gin.Context) {

@@ -139,3 +139,47 @@ func FindAssigneesCandidates(ctx *gin.Context, db *mongo.Database, m map[string]
 	dbResult.All(ctx, &candidates)
 	return &candidates, nil
 }
+
+func ArrangeMeeting(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Candidate, error) {
+	var candidate Candidate
+	db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
+
+	if candidate.MeetingCount == 4 {
+		return nil, errors.New("Not more meeting")
+	} else if candidate.MeetingCount == 3 {
+		foundAssignee, _ := FindAssigneeIDByName(ctx, db, map[string]string{ "name": "Zafer"})
+		candidate.Assignee = foundAssignee
+	}
+	time, _ := time.Parse(time.RFC3339, m["nextMeetingTime"])
+	candidate.NextMeeting = primitive.NewDateTimeFromTime(time)
+	
+	updateDocument := bson.M {
+		"$set": candidate,
+	}
+	_, dbErr := db.Collection("Candidates").UpdateOne(ctx, bson.M{"_id":m["id"]}, updateDocument)
+	if dbErr != nil {
+		return nil, dbErr
+	}
+	return &candidate, nil
+}
+
+func CompleteMeeting(ctx *gin.Context, db *mongo.Database, m map[string]string) (*Candidate, error) {
+	var candidate Candidate
+	db.Collection("Candidates").FindOne(ctx, bson.M{"_id":m["id"]}).Decode(&candidate)
+
+	if candidate.MeetingCount == 4 {
+		return nil, errors.New("Not more meeting")
+	} else if candidate.MeetingCount == 0 {
+		candidate.Status = "In Progress"
+	}
+	candidate.MeetingCount = candidate.MeetingCount + 1
+
+	updateDocument := bson.M {
+		"$set": candidate,
+	}
+	_, dbErr := db.Collection("Candidates").UpdateOne(ctx, bson.M{"_id":m["id"]}, updateDocument)
+	if dbErr != nil {
+		return nil, dbErr
+	}
+	return &candidate, nil
+}
