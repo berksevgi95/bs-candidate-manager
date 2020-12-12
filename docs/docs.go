@@ -272,6 +272,46 @@ var doc = `{
                 }
             }
         },
+        "/findAssigneesCandidates": {
+            "get": {
+                "description": "Read all candidates",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Read candidates",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name search by id",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "headers": {
+                            "Token": {
+                                "type": "string",
+                                "description": "qwerty"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
         "/readCandidate": {
             "get": {
                 "description": "Read all candidates",

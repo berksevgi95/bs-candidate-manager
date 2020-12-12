@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"strconv"
-	// "encoding/json"
 	"net/http"
 	"time"
 
@@ -170,4 +169,25 @@ func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
 	var assignee models.Assignee
 	c.Database.Collection(models.AssigneeTableName()).FindOne(ctx, bson.M{"_id":id}).Decode(&assignee)
 	ctx.JSON(http.StatusOK, assignee.Name)
+}
+
+// FindAssigneesCandidates godoc
+// @Summary Read candidates
+// @Description Read all candidates
+// @Accept  json
+// @Produce  json
+// @Param id query string false "name search by id"
+// @Success 200 {object} object model.Account
+// @Header 200 {string} Token "qwerty"
+// @Failure default {object} object httputil.DefaultError
+// @Router /findAssigneesCandidates [get]
+func (c *Controller) FindAssigneesCandidates(ctx *gin.Context) {
+	id := ctx.Query("id")
+	var candidates []models.Candidate
+	result, err := c.Database.Collection(models.CandidateTableName()).Find(ctx, bson.M{"assignee": id})
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, err.Error())
+	}
+	result.All(ctx, &candidates)
+	ctx.JSON(http.StatusOK, candidates)
 }

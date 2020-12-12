@@ -165,6 +165,32 @@ paths:
           schema:
             type: object
       summary: Read candidates
+  /findAssigneesCandidates:
+    get:
+      consumes:
+      - application/json
+      description: Read all candidates
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Read candidates
   /readCandidate:
     get:
       consumes:
