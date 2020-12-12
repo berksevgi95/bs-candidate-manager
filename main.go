@@ -32,6 +32,7 @@ func main() {
 		candidates.GET("/readCandidate", c.ReadCandidate)
 		candidates.POST("/createCandidate", c.CreateCandidate)
 		candidates.DELETE("/deleteCandidate", c.DeleteCandidate)
+		candidates.PUT("/denyCandidate", c.DenyCandidate)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/", func(c *gin.Context) {

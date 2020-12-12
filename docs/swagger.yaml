@@ -61,6 +61,32 @@ paths:
           schema:
             type: object
       summary: Delete candidates
+  /denyCandidate:
+    put:
+      consumes:
+      - application/json
+      description: Denies a candidate
+      parameters:
+      - description: name search by id
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: qwerty
+              type: string
+          schema:
+            type: object
+        default:
+          description: ""
+          schema:
+            type: object
+      summary: Deny candidates
   /readCandidate:
     get:
       consumes:
