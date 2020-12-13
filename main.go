@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"./controller"
+	"./api"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
@@ -26,7 +26,7 @@ func main() {
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 		
 	r := gin.Default()
-	c := controller.NewController()
+	c := api.NewController()
 
 	candidates := r.Group("/"); {
 		candidates.GET("/readCandidate", c.ReadCandidate)
