@@ -9,6 +9,7 @@ import (
 	"github.com/swaggo/gin-swagger"
 
 	"./docs"
+	"./repository"
 )
 
 // @contact.name API Support
@@ -26,18 +27,19 @@ func main() {
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 		
 	r := gin.Default()
-	c := api.NewController()
+
+	repository.Register()
 
 	candidates := r.Group("/"); {
-		candidates.GET("/readCandidate", c.ReadCandidate)
-		candidates.POST("/createCandidate", c.CreateCandidate)
-		candidates.DELETE("/deleteCandidate", c.DeleteCandidate)
-		candidates.PUT("/denyCandidate", c.DenyCandidate)
-		candidates.PUT("/acceptCandidate", c.AcceptCandidate)
-		candidates.GET("/findAssigneeIDByName", c.FindAssigneeIDByName)
-		candidates.GET("/findAssigneesCandidates", c.FindAssigneesCandidates)
-		candidates.PUT("/arrangeMeeting", c.ArrangeMeeting)
-		candidates.PUT("/completeMeeting", c.CompleteMeeting)
+		candidates.GET("/readCandidate", api.ReadCandidate)
+		candidates.POST("/createCandidate", api.CreateCandidate)
+		candidates.DELETE("/deleteCandidate", api.DeleteCandidate)
+		candidates.PUT("/denyCandidate", api.DenyCandidate)
+		candidates.PUT("/acceptCandidate", api.AcceptCandidate)
+		candidates.GET("/findAssigneeIDByName", api.FindAssigneeIDByName)
+		candidates.GET("/findAssigneesCandidates", api.FindAssigneesCandidates)
+		candidates.PUT("/arrangeMeeting", api.ArrangeMeeting)
+		candidates.PUT("/completeMeeting", api.CompleteMeeting)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/", func(c *gin.Context) {
