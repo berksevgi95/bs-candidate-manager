@@ -1,31 +1,16 @@
-package controller
+package api
 
 import (
-	"context"
+	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"../config"
 	"../models"
+	"../service"
 )
-
-type Controller struct { 
-	Database *mongo.Database
-}
-
-func NewController() *Controller {
-	var c = &Controller{}
-	var cfg = config.GetConfig()
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	clientOptions := options.Client().ApplyURI("mongodb://" + cfg.Host + ":" + cfg.Port)
-	collection, _ := mongo.Connect(ctx, clientOptions)
-	c.Database = collection.Database(cfg.Database)
-	return c;
-}
 
 // ReadCandidate godoc
 // @Summary Read candidates
@@ -37,14 +22,12 @@ func NewController() *Controller {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /readCandidate [get]
-func (c *Controller) ReadCandidate(ctx *gin.Context) {
-	readCandidate, creationError := models.ReadCandidate(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func ReadCandidate(ctx *gin.Context) {
+	result, error := service.ReadCandidate(ctx.Query("id"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, readCandidate)
+		ctx.JSON(http.StatusOK, result)
 	}
 }
 
@@ -64,20 +47,24 @@ func (c *Controller) ReadCandidate(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /createCandidate [post]
-func (c *Controller) CreateCandidate(ctx *gin.Context) {
-	createdCandidate, creationError := models.CreateCandidate(ctx, c.Database, map[string]string{
-		"first_name": ctx.Query("first_name"),
-		"last_name": ctx.Query("last_name"),
-		"email": ctx.Query("email"),
-		"department": ctx.Query("department"),
-		"university": ctx.Query("university"),
-		"experience": ctx.Query("experience"),
-		"assignee": ctx.Query("assignee"),
+func CreateCandidate(ctx *gin.Context) {
+	experience, experienceError := strconv.ParseBool(ctx.Query("experience"))
+	if experienceError != nil {
+		ctx.JSON(http.StatusNotFound, errors.New("Could not convert experience"))
+	}
+	result, error := service.CreateCandidate(&models.Candidate{
+		FirstName: ctx.Query("first_name"),
+		LastName: ctx.Query("last_name"),
+		Email: ctx.Query("email"),
+		Department: ctx.Query("department"),
+		University: ctx.Query("university"),
+		Experience: experience,
+		Assignee: ctx.Query("assignee"),
 	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, createdCandidate)
+		ctx.JSON(http.StatusOK, result)
 	}
 }
 
@@ -91,14 +78,12 @@ func (c *Controller) CreateCandidate(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /deleteCandidate [delete]
-func (c *Controller) DeleteCandidate(ctx *gin.Context) {
-	deletedCandidate, creationError := models.DeleteCandidate(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func DeleteCandidate(ctx *gin.Context) {
+	error := service.DeleteCandidate(ctx.Query("id"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, deletedCandidate)
+		ctx.JSON(http.StatusOK, true)
 	}
 }
 
@@ -112,14 +97,12 @@ func (c *Controller) DeleteCandidate(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /denyCandidate [put]
-func (c *Controller) DenyCandidate(ctx *gin.Context) {
-	deniedCandidate, creationError := models.DenyCandidate(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func DenyCandidate(ctx *gin.Context) {
+	error := service.DenyCandidate(ctx.Query("id"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, deniedCandidate)
+		ctx.JSON(http.StatusOK, true)
 	}
 }
 
@@ -133,14 +116,12 @@ func (c *Controller) DenyCandidate(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /acceptCandidate [put]
-func (c *Controller) AcceptCandidate(ctx *gin.Context) {
-	acceptedCandidate, creationError := models.AcceptCandidate(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func AcceptCandidate(ctx *gin.Context) {
+	error := service.AcceptCandidate(ctx.Query("id"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, acceptedCandidate)
+		ctx.JSON(http.StatusOK, true)
 	}
 }
 
@@ -154,14 +135,12 @@ func (c *Controller) AcceptCandidate(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /findAssigneeIDByName [get]
-func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
-	foundAssigneeID, creationError := models.FindAssigneeIDByName(ctx, c.Database, map[string]string{
-		"name": ctx.Query("name"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func FindAssigneeIDByName(ctx *gin.Context) {
+	result, error := service.FindAssigneeIDByName(ctx.Query("name"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, foundAssigneeID)
+		ctx.JSON(http.StatusOK, result)
 	}
 }
 
@@ -175,14 +154,12 @@ func (c *Controller) FindAssigneeIDByName(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /findAssigneesCandidates [get]
-func (c *Controller) FindAssigneesCandidates(ctx *gin.Context) {
-	foundCandidates, creationError := models.FindAssigneesCandidates(ctx, c.Database, map[string]string{
-		"assignee": ctx.Query("id"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func FindAssigneesCandidates(ctx *gin.Context) {
+	result, error := service.FindAssigneesCandidates(ctx.Query("id"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, foundCandidates)
+		ctx.JSON(http.StatusOK, result)
 	}
 }
 
@@ -197,15 +174,13 @@ func (c *Controller) FindAssigneesCandidates(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /arrangeMeeting [put]
-func (c *Controller) ArrangeMeeting(ctx *gin.Context) {
-	editedCandidate, creationError := models.ArrangeMeeting(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
-		"nextMeetingTime": ctx.Query("nextMeetingTime"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func ArrangeMeeting(ctx *gin.Context) {
+	time, _ := time.Parse(time.RFC3339, ctx.Query("nextMeetingTime"))
+	error := service.ArrangeMeeting(ctx.Query("_id"), &time)
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, editedCandidate)
+		ctx.JSON(http.StatusOK, true)
 	}
 }
 
@@ -219,13 +194,11 @@ func (c *Controller) ArrangeMeeting(ctx *gin.Context) {
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
 // @Router /completeMeeting [put]
-func (c *Controller) CompleteMeeting(ctx *gin.Context) {
-	editedCandidate, creationError := models.CompleteMeeting(ctx, c.Database, map[string]string{
-		"id": ctx.Query("id"),
-	})
-	if creationError != nil {
-		ctx.JSON(http.StatusNotFound, creationError.Error())
+func CompleteMeeting(ctx *gin.Context) {
+	error := service.CompleteMeeting(ctx.Query("id"))
+	if error != nil {
+		ctx.JSON(http.StatusNotFound, error.Error())
 	} else {
-		ctx.JSON(http.StatusOK, editedCandidate)
+		ctx.JSON(http.StatusOK, true)
 	}
 }
