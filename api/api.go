@@ -13,11 +13,11 @@ import (
 )
 
 // ReadCandidate godoc
-// @Summary Read candidates
-// @Description Read all candidates
+// @Summary Read candidate
+// @Description Reads a specific candidate by id
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param id query string false "Candidate ID"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -33,7 +33,7 @@ func ReadCandidate(ctx *gin.Context) {
 
 // CreateCandidate godoc
 // @Summary Create candidate
-// @Description Create new candidate
+// @Description Creates a new candidate
 // @Accept  json
 // @Produce  json
 // @Param first_name query string true "First Name"
@@ -69,11 +69,11 @@ func CreateCandidate(ctx *gin.Context) {
 }
 
 // DeleteCandidate godoc
-// @Summary Delete candidates
-// @Description Removes a candidate
+// @Summary Delete candidate
+// @Description Removes a candidate by id
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param id query string false "Candidate ID"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -88,11 +88,11 @@ func DeleteCandidate(ctx *gin.Context) {
 }
 
 // DenyCandidate godoc
-// @Summary Deny candidates
-// @Description Denies a candidate
+// @Summary Deny candidate
+// @Description Denies a candidate by id
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param id query string false "Candidate ID"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -107,11 +107,11 @@ func DenyCandidate(ctx *gin.Context) {
 }
 
 // AcceptCandidate godoc
-// @Summary Accept candidates
+// @Summary Accept candidate
 // @Description Accepts a candidate
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param id query string false "Candidate ID"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -126,11 +126,11 @@ func AcceptCandidate(ctx *gin.Context) {
 }
 
 // FindAssigneeIDByName godoc
-// @Summary Read candidates
-// @Description Read all candidates
+// @Summary Find assignee ID by name
+// @Description Finds ID of an assignee by name
 // @Accept  json
 // @Produce  json
-// @Param name query string false "name"
+// @Param name query string false "Assignee Name"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -145,11 +145,11 @@ func FindAssigneeIDByName(ctx *gin.Context) {
 }
 
 // FindAssigneesCandidates godoc
-// @Summary Read candidates
-// @Description Read all candidates
+// @Summary Find asignees candidates
+// @Description Finds candidates of an assignee by ID of assignee
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param id query string false "Assignee ID"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -164,12 +164,12 @@ func FindAssigneesCandidates(ctx *gin.Context) {
 }
 
 // ArrangeMeeting godoc
-// @Summary Accept candidates
-// @Description Accepts a candidate
+// @Summary Arrange meeting
+// @Description Aranges a meeting with an available candidate
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
-// @Param nextMeetingTime query string false "2020-11-11T20:59:48.133+03:00"
+// @Param id query string false "Candidate ID"
+// @Param nextMeetingTime query string false "Next Meeting Time (Ex. 2020-11-11T20:59:48.133+03:00)"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError
@@ -185,11 +185,11 @@ func ArrangeMeeting(ctx *gin.Context) {
 }
 
 // CompleteMeeting godoc
-// @Summary Accept candidates
-// @Description Accepts a candidate
+// @Summary Complete meeting
+// @Description Completes a meeting of specified candidate
 // @Accept  json
 // @Produce  json
-// @Param id query string false "name search by id"
+// @Param id query string false "Candidate ID"
 // @Success 200 {object} object model.Account
 // @Header 200 {string} Token "qwerty"
 // @Failure default {object} object httputil.DefaultError

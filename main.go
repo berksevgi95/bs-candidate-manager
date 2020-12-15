@@ -20,8 +20,8 @@ import (
 // @termsOfService http://swagger.io/terms/
 func main() {
 
-	docs.SwaggerInfo.Title = "Swagger Example API"
-	docs.SwaggerInfo.Description = "This is a sample server Petstore server."
+	docs.SwaggerInfo.Title = "BS Candidate Manager API"
+	docs.SwaggerInfo.Description = "This is a simple boilerplate of credential management API written in Go"
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}

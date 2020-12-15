@@ -14,7 +14,7 @@ paths:
       - application/json
       description: Accepts a candidate
       parameters:
-      - description: name search by id
+      - description: Candidate ID
         in: query
         name: id
         type: string
@@ -33,18 +33,18 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Accept candidates
+      summary: Accept candidate
   /arrangeMeeting:
     put:
       consumes:
       - application/json
-      description: Accepts a candidate
+      description: Aranges a meeting with an available candidate
       parameters:
-      - description: name search by id
+      - description: Candidate ID
         in: query
         name: id
         type: string
-      - description: "2020-11-11T20:59:48.133+03:00"
+      - description: Next Meeting Time (Ex. 2020-11-11T20:59:48.133+03:00)
         in: query
         name: nextMeetingTime
         type: string
@@ -63,14 +63,14 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Accept candidates
+      summary: Arrange meeting
   /completeMeeting:
     put:
       consumes:
       - application/json
-      description: Accepts a candidate
+      description: Completes a meeting of specified candidate
       parameters:
-      - description: name search by id
+      - description: Candidate ID
         in: query
         name: id
         type: string
@@ -89,12 +89,12 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Accept candidates
+      summary: Complete meeting
   /createCandidate:
     post:
       consumes:
       - application/json
-      description: Create new candidate
+      description: Creates a new candidate
       parameters:
       - description: First Name
         in: query
@@ -147,9 +147,9 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Removes a candidate
+      description: Removes a candidate by id
       parameters:
-      - description: name search by id
+      - description: Candidate ID
         in: query
         name: id
         type: string
@@ -168,14 +168,14 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Delete candidates
+      summary: Delete candidate
   /denyCandidate:
     put:
       consumes:
       - application/json
-      description: Denies a candidate
+      description: Denies a candidate by id
       parameters:
-      - description: name search by id
+      - description: Candidate ID
         in: query
         name: id
         type: string
@@ -194,14 +194,14 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Deny candidates
+      summary: Deny candidate
   /findAssigneeIDByName:
     get:
       consumes:
       - application/json
-      description: Read all candidates
+      description: Finds ID of an assignee by name
       parameters:
-      - description: name
+      - description: Assignee Name
         in: query
         name: name
         type: string
@@ -220,14 +220,14 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Read candidates
+      summary: Find assignee ID by name
   /findAssigneesCandidates:
     get:
       consumes:
       - application/json
-      description: Read all candidates
+      description: Finds candidates of an assignee by ID of assignee
       parameters:
-      - description: name search by id
+      - description: Assignee ID
         in: query
         name: id
         type: string
@@ -246,14 +246,14 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Read candidates
+      summary: Find asignees candidates
   /readCandidate:
     get:
       consumes:
       - application/json
-      description: Read all candidates
+      description: Reads a specific candidate by id
       parameters:
-      - description: name search by id
+      - description: Candidate ID
         in: query
         name: id
         type: string
@@ -272,5 +272,5 @@ paths:
           description: ""
           schema:
             type: object
-      summary: Read candidates
+      summary: Read candidate
 swagger: "2.0"

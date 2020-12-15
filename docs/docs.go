@@ -42,11 +42,11 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Accept candidates",
+                "summary": "Accept candidate",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Candidate ID",
                         "name": "id",
                         "in": "query"
                     }
@@ -75,24 +75,24 @@ var doc = `{
         },
         "/arrangeMeeting": {
             "put": {
-                "description": "Accepts a candidate",
+                "description": "Aranges a meeting with an available candidate",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Accept candidates",
+                "summary": "Arrange meeting",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Candidate ID",
                         "name": "id",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "2020-11-11T20:59:48.133+03:00",
+                        "description": "Next Meeting Time (Ex. 2020-11-11T20:59:48.133+03:00)",
                         "name": "nextMeetingTime",
                         "in": "query"
                     }
@@ -121,18 +121,18 @@ var doc = `{
         },
         "/completeMeeting": {
             "put": {
-                "description": "Accepts a candidate",
+                "description": "Completes a meeting of specified candidate",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Accept candidates",
+                "summary": "Complete meeting",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Candidate ID",
                         "name": "id",
                         "in": "query"
                     }
@@ -161,7 +161,7 @@ var doc = `{
         },
         "/createCandidate": {
             "post": {
-                "description": "Create new candidate",
+                "description": "Creates a new candidate",
                 "consumes": [
                     "application/json"
                 ],
@@ -240,18 +240,18 @@ var doc = `{
         },
         "/deleteCandidate": {
             "delete": {
-                "description": "Removes a candidate",
+                "description": "Removes a candidate by id",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete candidates",
+                "summary": "Delete candidate",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Candidate ID",
                         "name": "id",
                         "in": "query"
                     }
@@ -280,18 +280,18 @@ var doc = `{
         },
         "/denyCandidate": {
             "put": {
-                "description": "Denies a candidate",
+                "description": "Denies a candidate by id",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Deny candidates",
+                "summary": "Deny candidate",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Candidate ID",
                         "name": "id",
                         "in": "query"
                     }
@@ -320,18 +320,18 @@ var doc = `{
         },
         "/findAssigneeIDByName": {
             "get": {
-                "description": "Read all candidates",
+                "description": "Finds ID of an assignee by name",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Read candidates",
+                "summary": "Find assignee ID by name",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name",
+                        "description": "Assignee Name",
                         "name": "name",
                         "in": "query"
                     }
@@ -360,18 +360,18 @@ var doc = `{
         },
         "/findAssigneesCandidates": {
             "get": {
-                "description": "Read all candidates",
+                "description": "Finds candidates of an assignee by ID of assignee",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Read candidates",
+                "summary": "Find asignees candidates",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Assignee ID",
                         "name": "id",
                         "in": "query"
                     }
@@ -400,18 +400,18 @@ var doc = `{
         },
         "/readCandidate": {
             "get": {
-                "description": "Read all candidates",
+                "description": "Reads a specific candidate by id",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Read candidates",
+                "summary": "Read candidate",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "name search by id",
+                        "description": "Candidate ID",
                         "name": "id",
                         "in": "query"
                     }
