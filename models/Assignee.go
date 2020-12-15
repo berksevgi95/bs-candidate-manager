@@ -1,3 +1,5 @@
+// Package models represents model(s) which is used for correlation between DO and BO
+// Assignee represents assignees stored in the DB
 package models
 
 type Assignee struct {

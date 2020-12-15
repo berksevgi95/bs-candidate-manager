@@ -3,13 +3,13 @@ package main
 import (
 	"net/http"
 
-	"./api"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
 	"./docs"
 	"./repository"
+	"./api"
 )
 
 // @contact.name API Support

@@ -1,3 +1,5 @@
+// Package api implements of API/Controller layer of application
+// Consisting of some API endpoints which are covered with Swagger annotations
 package api
 
 import (

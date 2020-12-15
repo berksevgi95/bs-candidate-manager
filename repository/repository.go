@@ -1,30 +1,31 @@
+// Package repository is responsible for accessing DB on CRUD operations
 package repository
 
 import (
 	"context"
 	"time"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"../config"
 	"../models"
 	"../utils"
 )
 
+// Register returns mongo.Database
 func Register() {
 	utils.Singleton(func() *mongo.Database {
-		var cfg = config.GetConfig()
 		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-		clientOptions := options.Client().ApplyURI("mongodb://" + cfg.Host + ":" + cfg.Port)
+		clientOptions := options.Client().ApplyURI("mongodb://" + os.Getenv("REPOHOST") + ":" + os.Getenv("REPOPORT"))
 		collection, _ := mongo.Connect(ctx, clientOptions)
-		return collection.Database(cfg.Database)
+		return collection.Database(os.Getenv("REPODB"))
 	})
 }
 
-
+// ReadCandidate returns models.Candidate, error
 func ReadCandidate(filter primitive.M) (*models.Candidate, error) {
 	var db *mongo.Database
 	utils.Make(&db)
@@ -37,6 +38,7 @@ func ReadCandidate(filter primitive.M) (*models.Candidate, error) {
 	return &candidate, nil
 }
 
+// ReadCandidates returns models.Candidate[], error
 func ReadCandidates(filter primitive.M) (*[]models.Candidate, error) {
 	var db *mongo.Database
 	utils.Make(&db)
@@ -50,6 +52,7 @@ func ReadCandidates(filter primitive.M) (*[]models.Candidate, error) {
 	return &candidates, nil
 }
 
+// CreateCandidate returns models.Candidate, error
 func CreateCandidate(candidate models.Candidate) (bool, error) {
 	var db *mongo.Database
 	utils.Make(&db)
@@ -61,7 +64,7 @@ func CreateCandidate(candidate models.Candidate) (bool, error) {
 	return true, nil
 }
 
-
+// DeleteCandidate returns bool, error
 func DeleteCandidate(filter primitive.M) (bool, error) {
 	var db *mongo.Database
 	utils.Make(&db)
@@ -73,7 +76,7 @@ func DeleteCandidate(filter primitive.M) (bool, error) {
 	return true, nil
 }
 
-
+// UpdateCandidate returns bool, error
 func UpdateCandidate(candidate *models.Candidate) (bool, error) {
 	var db *mongo.Database
 	utils.Make(&db)
@@ -88,7 +91,7 @@ func UpdateCandidate(candidate *models.Candidate) (bool, error) {
 	return true, nil
 }
 
-
+// ReadAssignee returns models.Assignee, error
 func ReadAssignee(filter primitive.M) (*models.Assignee, error) {
 	var db *mongo.Database
 	utils.Make(&db)

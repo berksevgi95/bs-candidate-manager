@@ -8,8 +8,6 @@ import (
 
 	"../models"
 	"../repository"
-
-
 )
 
 func TestReadCandidate(t *testing.T) {

@@ -1,3 +1,5 @@
+// Package models represents model(s) which is used for correlation between DO and BO
+// Assignee represents assignees stored in the DB
 package models
 
 import (
@@ -19,11 +21,13 @@ type Candidate struct {
 	ApplicationDate	primitive.DateTime `json:"application_date,omitempty" bson:"application_date,omitempty"`
 }
 
+// Deny returns candidate
 func (c *Candidate) Deny() (_candidate *Candidate) {
 	c.Status = "Denied";
 	return c;
 }
 
+// Accept returns candidate
 func (c *Candidate) Accept() (_candidate *Candidate) {
 	c.Status = "Accepted";
 	return c;
